@@ -3,7 +3,7 @@ import subprocess
 import time
 
 # Path to the file containing sentences
-SENTENCES_FILE = "/Users/haraldbeker/Speak4me/sentences.txt"
+SENTENCES_FILE = os.path.expanduser("~/Speak4me/sentences.txt")
 
 # Ensure the sentences file exists
 open(SENTENCES_FILE, 'a').close()
