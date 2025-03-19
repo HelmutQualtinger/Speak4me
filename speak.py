@@ -1,4 +1,13 @@
+
 #!/usr/bin/env python3
+"""
+    This script uses the 'say' utility on macOS to speak sentences from a file.
+    The script uses fzf to select a sentence from the file to speak.
+    The script also supports changing the speaking speed and voice. 
+    The script will remember the last 5 spoken sentences and allow for quickly repeating them.
+    The script will also remove duplicate lines from the sentences file.
+    The script will exit when the user types 'exit'.
+"""
 import os
 import subprocess
 import time
@@ -17,26 +26,26 @@ speed = 180
 while True:
     # Combine last spoken sentences with the sentences file for fzf input
     reversed_last_spoken = last_spoken[::-1]
-    
-    fzf_input = '\n'.join(reversed_last_spoken) + '\n' + open(SENTENCES_FILE).read()
-    
+    fzf_input = '\n'.join(reversed_last_spoken) + '\n' + open(SENTENCES_FILE).read()  
     # Use fzf to find a fuzzy match in the sentences file, ignoring case
     result = subprocess.run(['fzf', '--print-query', '--exact', '--ignore-case', '--algo=v2'], 
                             input=fzf_input, 
                             text=True, capture_output=True)
-    match = result.stdout.strip().split('\n')[-1]
-    print(f"Spreche: {match}")
-    
-    # Adjust the speaking speed based on the match
-    if match.lower() == "computer sprich langsam":
-        speed = 50
-        print("Speed set to slow (50).")
-    elif match.lower() == "computer sprich normal":
-        speed = 180
-        print("Speed set to normal (180).")
-    elif match.lower() == "computer sprich schnell":
-        speed = 200
-        print("Speed set to fast (200).")
+
+    match = result.stdout.strip().split('\n')[-1] # Get the last line from the output either selection or query itself
+    match = match.rstrip('-')
+    print(f"Spreche: {match}")    
+    # Adjust the speaking speed based on the match using a case-like structure
+    match_lower = match.lower()
+    match_cases = {
+        "computer sprich langsam": (50, "Speed set to slow (50)."),
+        "computer sprich normal": (180, "Speed set to normal (180)."),
+        "computer sprich schnell": (200, "Speed set to fast (200).")
+    }
+
+    if match_lower in match_cases:
+        speed, message = match_cases[match_lower]
+        print(message)
     # Add the input to the sentences file if it's not already there
     with open(SENTENCES_FILE, 'a') as f:
         f.write(match + '\n')
