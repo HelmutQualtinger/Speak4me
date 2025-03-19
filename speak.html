@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harrys Stimme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.3em;
+            margin-top: 25px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 50px;
+            font-size: 11px;
+        }
+        select {
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .slider-container {
+            margin-bottom: 15px;
+        }
+        .slider-container label {
+            display: inline-block;
+            width: 120px;
+        }
+        .slider {
+            width: 50%;
+            vertical-align: middle;
+        }
+        .slider-value {
+            display: inline-block;
+            width: 40px;
+            text-align: center;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .controls-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        .history-item {
+            padding: 1px;
+            margin: 1px 0;
+            background-color: #f9f9f9;
+            color:rgba(35, 6, 152, 0.849);
+            border: 1px solid #eee;
+            border-radius: 4px;
+            cursor: crosshair;
+            transition: background-color 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .history-item:hover {
+            background-color: #e9e9e9;
+        }
+        .history-container {
+            margin-top: 20px;
+            max-height: 400px; /* Erhöhte maximale Höhe */
+            overflow-y: auto;
+        }
+        .no-history {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+        .divider {
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Harrys Stimme</h1>
+        
+        <div class="input-group">
+            <label for="textInput">Text eingeben:</label>
+            <textarea id="textInput" placeholder="Hier Text eingeben, der gesprochen werden soll..."></textarea>
+        </div>
+        <h2>Verlauf</h2>
+        <div id="historyContainer" class="history-container">
+            <div class="no-history">Keine Einträge im Verlauf</div>
+        </div>
+        <div class="controls">
+            <div class="controls-column">
+                <div class="input-group">
+                    <label for="voiceSelect">Stimme auswählen:</label>
+                    <select id="voiceSelect"></select>
+                </div>
+                
+                <div class="slider-container">
+                    <label for="volumeSlider">Lautstärke:</label>
+                    <input type="range" id="volumeSlider" class="slider" min="0" max="1" step="0.1" value="1">
+                    <span id="volumeValue" class="slider-value">1.0</span>
+                </div>
+                
+                <div class="slider-container">
+                    <label for="rateSlider">Geschwindigkeit:</label>
+                    <input type="range" id="rateSlider" class="slider" min="0.5" max="2" step="0.1" value="1">
+                    <span id="rateValue" class="slider-value">1.0</span>
+                </div>
+                
+                <div class="slider-container">
+                    <label for="pitchSlider">Tonhöhe:</label>
+                    <input type="range" id="pitchSlider" class="slider" min="0.5" max="2" step="0.1" value="1">
+                    <span id="pitchValue" class="slider-value">1.0</span>
+                </div>
+            </div>
+        </div>
+        
+        <button id="speakButton">Sprechen</button>
+        
+        <div class="divider"></div>
+        
+        <div class="info"></div>
+            <p>Drücken Sie die Eingabetaste im Textfeld oder klicken Sie auf "Sprechen", um den Text vorlesen zu lassen.</p>
+            <p>Klicken Sie auf einen Eintrag im Verlauf, um diesen Text erneut vorlesen zu lassen.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('textInput');
+            const voiceSelect = document.getElementById('voiceSelect');
+            const speakButton = document.getElementById('speakButton');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeValue = document.getElementById('volumeValue');
+            const rateSlider = document.getElementById('rateSlider');
+            const rateValue = document.getElementById('rateValue');
+            const pitchSlider = document.getElementById('pitchSlider');
+            const pitchValue = document.getElementById('pitchValue');
+            const historyContainer = document.getElementById('historyContainer');
+            let voices = [];
+            
+            // Array für den Verlauf der gesprochenen Texte
+            let speakHistory = [];
+            const maxHistoryItems = 20; // Erhöhte maximale Anzahl der Einträge
+
+            // Funktion zum Abrufen der verfügbaren Stimmen
+            function loadVoices() {
+                voices = speechSynthesis.getVoices();
+                voiceSelect.innerHTML = '';
+                
+                // Filterung nach deutschen, italienischen und englischen Stimmen
+                const filteredVoices = voices.filter(voice => 
+                    voice.lang.startsWith('de') || 
+                    voice.lang.startsWith('it') || 
+                    voice.lang.startsWith('en')
+                );
+                
+                // Gruppierung nach Sprachen
+                const languageGroups = {
+                    'de': 'Deutsch',
+                    'it': 'Italienisch',
+                    'en': 'Englisch'
+                };
+                
+                // Gruppierte Optionen erstellen
+                for (const langPrefix in languageGroups) {
+                    const langVoices = filteredVoices.filter(voice => voice.lang.startsWith(langPrefix));
+                    
+                    if (langVoices.length > 0) {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = languageGroups[langPrefix];
+                        
+                        langVoices.forEach(voice => {
+                            const option = document.createElement('option');
+                            option.value = voice.name;
+                            option.textContent = `${voice.name} (${voice.lang})`;
+                            optgroup.appendChild(option);
+                        });
+                        
+                        voiceSelect.appendChild(optgroup);
+                    }
+                }
+                
+                // Wähle eine deutsche Stimme als Standard, wenn verfügbar
+                const defaultVoice = filteredVoices.find(voice => voice.lang.startsWith('de'));
+                if (defaultVoice) {
+                    voiceSelect.value = defaultVoice.name;
+                }
+            }
+
+            // Funktion zum Aktualisieren des Verlaufs
+            function updateHistoryDisplay() {
+                if (speakHistory.length === 0) {
+                    historyContainer.innerHTML = '<div class="no-history">Keine Einträge im Verlauf</div>';
+                    return;
+                }
+                
+                historyContainer.innerHTML = '';
+                
+                speakHistory.forEach((item, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.textContent = item.text;
+                    historyItem.title = item.text; // Zeigt den vollständigen Text als Tooltip an
+                    
+                    // Event-Listener für das erneute Sprechen
+                    historyItem.addEventListener('click', () => {
+                        speakHistoryItem(item);
+                    });
+                    
+                    historyContainer.appendChild(historyItem);
+                });
+            }
+
+            // Funktion zum Sprechen eines Eintrags aus dem Verlauf
+            function speakHistoryItem(item) {
+                // Setze das Eingabefeld auf den ausgewählten Text
+                textInput.value = item.text;
+
+                // Aktuelle Einstellungen für Lautstärke, Geschwindigkeit und Tonhöhe übernehmen
+                const volume = parseFloat(volumeSlider.value);
+                const rate = parseFloat(rateSlider.value);
+                const pitch = parseFloat(pitchSlider.value);
+                
+                // Stoppe vorherige Sprachausgabe
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(item.text);
+                
+                // Verwende die aktuell ausgewählte Stimme
+                const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+                
+                // Aktuelle Einstellungen anwenden
+                utterance.volume = volume;
+                utterance.rate = rate;
+                utterance.pitch = pitch;
+                
+                speechSynthesis.speak(utterance);
+            }
+
+            // Funktion zum Hinzufügen eines Eintrags zum Verlauf
+            function addToHistory(text, voice) {
+                // Prüfen, ob der Text bereits im Verlauf ist
+                const existingIndex = speakHistory.findIndex(item => item.text === text);
+                
+                // Falls ja, den vorhandenen Eintrag entfernen
+                if (existingIndex !== -1) {
+                    speakHistory.splice(existingIndex, 1);
+                }
+                
+                // Neuen Eintrag am Anfang hinzufügen
+                speakHistory.unshift({
+                    text: text,
+                    voice: voice.name
+                });
+                
+                // Begrenze die Größe des Verlaufs
+                if (speakHistory.length > maxHistoryItems) {
+                    speakHistory.pop();
+                }
+                
+                // Verlauf anzeigen aktualisieren
+                updateHistoryDisplay();
+                
+                // Optional: Speichern des Verlaufs im localStorage
+                localStorage.setItem('ttsHistory', JSON.stringify(speakHistory));
+            }
+
+            // Funktion zum Laden des Verlaufs aus dem localStorage
+            function loadHistory() {
+                const savedHistory = localStorage.getItem('ttsHistory');
+                if (savedHistory) {
+                    try {
+                        speakHistory = JSON.parse(savedHistory);
+                        updateHistoryDisplay();
+                    } catch (e) {
+                        console.error('Fehler beim Laden des Verlaufs:', e);
+                        speakHistory = [];
+                    }
+                }
+            }
+
+            // Erstes Laden der Stimmen
+            loadVoices();
+            
+            // Erneutes Laden, wenn sich die Stimmen ändern
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+
+            // Lautstärke-Slider Event-Listener
+            volumeSlider.addEventListener('input', function() {
+                volumeValue.textContent = parseFloat(this.value).toFixed(1);
+            });
+
+            // Geschwindigkeits-Slider Event-Listener
+            rateSlider.addEventListener('input', function() {
+                rateValue.textContent = parseFloat(this.value).toFixed(1);
+            });
+            
+            // Tonhöhen-Slider Event-Listener
+            pitchSlider.addEventListener('input', function() {
+                pitchValue.textContent = parseFloat(this.value).toFixed(1);
+            });
+
+            // Funktion zum Sprechen des Textes
+            function speakText() {
+                const text = textInput.value.trim();
+                if (!text) return;
+                
+                // Stoppe vorherige Sprachausgabe
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Suche die ausgewählte Stimme
+                const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    
+                    // Eintrag zum Verlauf hinzufügen
+                    addToHistory(text, selectedVoice);
+                }
+                
+                // Einstellungen anwenden
+                utterance.volume = parseFloat(volumeSlider.value);
+                utterance.rate = parseFloat(rateSlider.value);
+                utterance.pitch = parseFloat(pitchSlider.value);
+                
+                speechSynthesis.speak(utterance);
+            }
+
+            // Event-Listener für den Sprechen-Button
+            speakButton.addEventListener('click', speakText);
+            
+            // Event-Listener für die Enter-Taste im Textfeld
+            textInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    speakText();
+                }
+            });
+            
+            // Verlauf beim Laden der Seite abrufen
+            loadHistory();
+        });
+    </script>
+</body>
+</html>
+// Setze das Eingabefeld auf den ausgewählten Text
+textInput.value = item.text;
