@@ -1,33 +1,33 @@
 # Speak4Me
 
-`speak.py` is a Python script that allows selecting text from a file (`sentences.txt`) and reading it aloud using macOS's text-to-speech feature (`say` command). It provides an interactive user interface based on `fzf` to quickly and efficiently search and select texts.
+`speak.py` ist ein Python-Skript, das es ermöglicht, Text aus einer Datei (`sentences.txt`) auszuwählen und mithilfe der Text-zu-Sprache-Funktion von macOS (`say`-Befehl) laut vorzulesen. Es bietet eine interaktive Benutzeroberfläche basierend auf `fzf`, um Texte schnell und effizient zu durchsuchen und auszuwählen.
 
-## Use Case and Motivation
+## Anwendungsfall und Motivation
 
-My vocal cords are severely damaged after surgery. I get tired quickly when speaking, and I am hard to understand. I wanted a simple way to have what I type spoken aloud. I am not very fast at typing, and communication this way is very slow. I want the spoken output not only to play through the speakers but also to be routed to a virtual microphone so that I can use it in telephony apps and video conferencing programs. This way, I can type, but other participants hear spoken words.
+Meine Stimmbänder sind nach einer Operation stark beschädigt. Ich ermüde schnell beim Sprechen und bin schwer zu verstehen. Ich wollte eine einfache Möglichkeit haben, das, was ich tippe, laut aussprechen zu lassen. Ich bin nicht sehr schnell im Tippen, und die Kommunikation auf diese Weise ist sehr langsam. Ich möchte, dass die gesprochene Ausgabe nicht nur über die Lautsprecher abgespielt wird, sondern auch an ein virtuelles Mikrofon weitergeleitet wird, damit ich sie in Telefonie-Apps und Videokonferenzprogrammen verwenden kann. Auf diese Weise kann ich tippen, aber andere Teilnehmer hören gesprochene Worte.
 
-The macOS text-to-speech feature in Accessibility is decent, but it is not easy to quickly search through a large number of pre-written texts, and you have to switch between mouse and keyboard. That’s why I use the powerful `fzf`. A few keystrokes quickly narrow down the sentences without needing to remember keyboard shortcuts. It works somewhat like text prediction—not quite, but almost like artificial intelligence. The last five inputs are shown at the top of the list to quickly repeat them and as a reminder of what was just said in case the other party didn’t understand.
+Die Text-zu-Sprache-Funktion von macOS in den Bedienungshilfen ist zwar brauchbar, aber es ist nicht einfach, schnell durch eine große Anzahl vorgefertigter Texte zu suchen, und man muss zwischen Maus und Tastatur wechseln. Deshalb nutze ich das leistungsstarke `fzf`. Mit wenigen Tastenanschlägen kann man die Sätze schnell eingrenzen, ohne sich Tastenkombinationen merken zu müssen. Es funktioniert ein bisschen wie Textvorhersage – nicht ganz, aber fast wie künstliche Intelligenz. Die letzten fünf Eingaben werden oben in der Liste angezeigt, um sie schnell wiederholen zu können und als Erinnerung daran, was gerade gesagt wurde, falls die andere Partei es nicht verstanden hat.
 
-The longer you use the program, the more texts the system learns, and the more efficient it becomes. The texts are permanently saved in a file.
+Je länger man das Programm nutzt, desto mehr Texte lernt das System, und desto effizienter wird es. Die Texte werden dauerhaft in einer Datei gespeichert.
 
-## Features
+## Funktionen
 
-- **Text Selection with `fzf`**: The script uses `fzf`, a powerful fuzzy search tool, to select texts from the `sentences.txt` file or a list of recently spoken sentences.
-- **Text-to-Speech**: The selected text is read aloud using macOS's text-to-speech feature (`say` command).
-- **Speed Settings**: The speaking speed can be adjusted using specific commands:
-  - `computer speak slowly`: Sets the speed to slow (50).
-  - `computer speak normally`: Sets the speed to normal (180).
-  - `computer speak quickly`: Sets the speed to fast (200).
-- **Voice Switching**: By entering a command like `switch to Markus`, the voice can be changed, provided the voice is available.
-- **History of Spoken Sentences**: The script saves the last five spoken sentences, which are prioritized in the next selection.
-- **Automatic Duplicate Removal**: Duplicate entries in the `sentences.txt` file are automatically removed.
+- **Textauswahl mit `fzf`**: Das Skript verwendet `fzf`, ein leistungsstarkes Fuzzy-Suchtool, um Texte aus der Datei `sentences.txt` oder einer Liste kürzlich gesprochener Sätze auszuwählen.
+- **Text-zu-Sprache**: Der ausgewählte Text wird mithilfe der Text-zu-Sprache-Funktion von macOS (`say`-Befehl) laut vorgelesen.
+- **Geschwindigkeitseinstellungen**: Die Sprechgeschwindigkeit kann mit bestimmten Befehlen angepasst werden:
+  - `computer sprich langsam`: Setzt die Geschwindigkeit auf langsam (50).
+  - `computer sprich normal`: Setzt die Geschwindigkeit auf normal (180).
+  - `computer sprich schnell`: Setzt die Geschwindigkeit auf schnell (200).
+- **Stimmenwechsel**: Durch Eingabe eines Befehls wie `wechsel zu Markus` kann die Stimme geändert werden, sofern die Stimme verfügbar ist.
+- **Verlauf gesprochener Sätze**: Das Skript speichert die letzten fünf gesprochenen Sätze, die bei der nächsten Auswahl priorisiert werden.
+- **Automatische Duplikatentfernung**: Doppelte Einträge in der Datei `sentences.txt` werden automatisch entfernt.
 
-## Requirements
+## Anforderungen
 
-- **Operating System**: macOS (as the script uses the `say` command).
-- **Python Version**: Python 3.x.
-- **Additional Tools**:
-  - `fzf` must be installed. It can be installed via Homebrew:
+- **Betriebssystem**: macOS (da das Skript den `say`-Befehl verwendet).
+- **Python-Version**: Python 3.x.
+- **Zusätzliche Tools**:
+  - `fzf` muss installiert sein. Es kann über Homebrew installiert werden:
   
     ```bash
     brew install fzf
@@ -35,13 +35,13 @@ The longer you use the program, the more texts the system learns, and the more e
 
 ## Installation
 
-1. Clone the repository or copy the `speak.py` file into a directory.
-2. Ensure the `sentences.txt` file exists. If not, it will be created automatically.
-3. Install `fzf` if it is not already installed.
+1. Klonen Sie das Repository oder kopieren Sie die Datei `speak.py` in ein Verzeichnis.
+2. Stellen Sie sicher, dass die Datei `sentences.txt` existiert. Falls nicht, wird sie automatisch erstellt.
+3. Installieren Sie `fzf`, falls es noch nicht installiert ist.
 
-## Usage
+## Verwendung
 
-1. Start the script:
+1. Starten Sie das Skript:
   
    ```bash
    python3 speak.py

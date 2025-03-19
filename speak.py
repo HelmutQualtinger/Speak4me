@@ -18,7 +18,6 @@ SENTENCES_FILE = os.path.expanduser("~/Speak4me/sentences.txt")
 # Ensure the sentences file exists
 open(SENTENCES_FILE, 'a').close()
 voice = 'Markus'
-
 # List to store the last 5 spoken sentences
 last_spoken = []
 speed = 180
@@ -72,7 +71,7 @@ while True:
     
     # Update the last spoken list
     last_spoken.append(match)
-    if len(last_spoken) > 5:
+    if len(last_spoken) > 10:
         last_spoken.pop(0)  # Keep only the last 5 entries
     
     # Remove duplicate lines from the sentences file
