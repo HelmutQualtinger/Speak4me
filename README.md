@@ -19,7 +19,7 @@ Je länger man das Programm nutzt, desto mehr Texte lernt das System, und desto 
   - `computer sprich langsam`: Setzt die Geschwindigkeit auf langsam (50).
   - `computer sprich normal`: Setzt die Geschwindigkeit auf normal (180).
   - `computer sprich schnell`: Setzt die Geschwindigkeit auf schnell (200).
-- **Stimmenwechsel**: Durch Eingabe eines Befehls wie `auf Markus umschalten` kann die Stimme geändert werden, sofern die Stimme verfügbar ist. Das ist vorallem notwendig wenn man in mehreren Sprachen kommuniziert, mit geeigneten Stimmen für Sprachen. Mit dem Befehl `say -v \?` sieht man welche Sprachen und Stimmen auf diesem Mac verfügbar sind. Mit Systemeinstellung->Sprachausgabe  kann man weitere Stimmen von Apple installieren
+- **Stimmenwechsel**: Durch Eingabe eines Befehls wie `auf Markus umschalten` kann die Stimme geändert werden, sofern die Stimme verfügbar ist. Das ist vor allem notwendig wenn man in mehreren Sprachen kommuniziert, mit geeigneten Stimmen für Sprachen. Mit dem Befehl `say -v \?` sieht man welche Sprachen und Stimmen auf diesem Mac verfügbar sind. Mit Systemeinstellung->Sprachausgabe  kann man weitere Stimmen von Apple installieren
 - **Verlauf gesprochener Sätze**: Das Skript speichert die letzten 10 gesprochenen Sätze, ganz oben auf der Liste, sodass man sie bei Bedarf mit den Pfeiltasten schnell wiederholen kann.
 - **Automatische Duplikats-Entfernung**: Doppelte Einträge in der Datei `sentences.txt` werden automatisch entfernt.
 
