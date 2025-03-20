@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
     This script uses the 'say' utility on macOS to speak sentences from a file.
