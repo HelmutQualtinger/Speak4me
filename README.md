@@ -36,7 +36,7 @@ Je länger man das Programm nutzt, desto mehr Texte lernt das System, und desto 
 
 ## Installation
 
-1. Klonen Sie das Repository oder kopieren Sie die Datei `speak.py` in ein Verzeichnis.
+1. Klonen Sie das Repository oder kopieren Sie die Datei `speak.py` in ein Verzeichnis. `chmod oug+x speak.py` und `chmod oug+x speak.sh`
 2. Stellen Sie sicher, dass die Datei `sentences.txt` existiert. Falls nicht, wird sie automatisch erstellt.
 3. Installieren Sie `fzf`, falls es noch nicht installiert ist.
 
@@ -47,3 +47,13 @@ Je länger man das Programm nutzt, desto mehr Texte lernt das System, und desto 
    ```bash
    python3 speak.py
    ```
+
+oder
+
+  ```bash
+    ./speak.py
+  ```
+
+ ```bash
+    ./speak.sh
+  ```
