@@ -53,19 +53,22 @@ while True:
     if match.lower() == "exit.":
         print("Exiting program.")
         break
-    
+    match1 =match    
     if "auf" in match.lower() and "umschalten" in match.lower():
         new_voice = match.split()[1]
         if new_voice in subprocess.run(['say', '-v', '?'], capture_output=True, text=True).stdout:
             voice = new_voice
+            match1 = "New voice " + new_voice
             print(f"Voice switched to: {voice}")
         else:
             print(f"Voice {new_voice} not found")
         time.sleep(0.5)
-    match1 =match
-    translator = GoogleTranslator(source='auto', target='en')
-    match1 = translator.translate(match)
+
+    # translator = GoogleTranslator(source='auto', target='en')
+    # match1 = translator.translate(match)
     # Use the 'say' utility to pronounce the text in the background
+    
+    
     subprocess.Popen(['say', '-r', f'{speed}', '-v', voice, match1], 
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.Popen(['say', '-r', f'{speed}', '-v', voice, '-a', '90', match1], 
